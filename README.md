@@ -1,6 +1,6 @@
 # Apex By Example
 
-This repository is a curated collection of patterns, practices, and principles for developing in Apex, the programming language used on the Salesforce platform. This repository serves as a practical reference for developers looking to enhance their Apex skills and deepen their understanding of the language.
+This repository is a curated collection of patterns, practices, and principles for developing in Apex, the programming language used on the Salesforce platform. It serves as a practical reference for developers looking to enhance their Apex skills and deepen their understanding of the language.
 
 The collection includes a wide range of examples—from basic syntax and data types to more advanced topics like asynchronous processing and external system integration.
 

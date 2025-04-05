@@ -16,3 +16,7 @@ You can execute this code in the Salesforce Developer Console or any Apex execut
 ```Apex
 HelloWorld.execute();
 ```
+
+# Further Reading
+- [Apex Developer Guide | Salesforce Developers](https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_dev_guide.htm)
+- [System Class | Apex Reference Guide | Salesforce Developers](https://developer.salesforce.com/docs/atlas.en-us.apexref.meta/apexref/apex_methods_system_system.htm)

@@ -104,6 +104,7 @@ public class Countdown {
 
         while (number > 0) {
             System.debug(number); // Print 10 to 1
+            
             number--;
         }
     }

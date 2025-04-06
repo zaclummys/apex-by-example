@@ -100,11 +100,11 @@ ID recordId = '0012w00000Xyz123ABC';
 System.debug('Record ID: ' + recordId); // Output: Record ID: 0012w00000Xyz123ABC
 ```
 
-> [!TIP]
-> The `ID` also accepts 15-character IDs, but Apex will convert them to 18-character IDs automatically.
-
 > [!IMPORTANT]
 > The `ID` automatically validates the ID format. If you try to assign an invalid ID to an `ID` variable, it will throw a `System.StringException`.
+
+> [!TIP]
+> The `ID` also accepts 15-character IDs, but Apex will convert them to 18-character IDs automatically.
 
 ### Blob
 The `Blob` type is commonly used when working with file contents, encryption keys, or Base64-encoded data.

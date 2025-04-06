@@ -112,19 +112,14 @@ public class Countdown {
 
 ### Do-While Loop
 
-The `do while` loop is similar to the `while` loop, but it guarantees that the block of code will execute at least once before checking the condition.
+Although Do-While Loop is a valid control flow statement in Apex, it is less commonly used compared to While Loop. It has the following characteristics:
+- The block of code is executed at least once, even if the condition is false.
+- The condition is checked after the loop, which can lead to unexpected runs if not carefully managed.
+- It’s easier to misread, especially for junior developers.
+- Often, while or for loops can achieve the same thing with more predictable flow.
 
-```apex
-public class DoWhileExample {
-    public static void runOnceAtLeast () {
-        Integer number = 0;
-        do {
-            System.debug('Number is: ' + number); 
-            number++;
-        } while (number < 5);
-    }
-}
-```
+> [!CAUTION]
+> For that reason, we do not recommended to use Do-While Loops in Apex.
 
 ## Switch Statements
 Switch statements allow you to execute different blocks of code based on the value of a variable. They are often more readable than multiple `if-else` statements when checking the same variable against different values.

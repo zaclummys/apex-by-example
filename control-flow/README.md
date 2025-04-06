@@ -130,6 +130,7 @@ public class DoWhileExample {
 Switch statements allow you to execute different blocks of code based on the value of a variable. They are often more readable than multiple `if-else` statements when checking the same variable against different values.
 
 ### Switch With Literals
+You can use switch statements with literals to handle different cases based on the value of a variable.
 ```apex
 public class DayOfWeek {
     public static String getDayName (Integer day) {
@@ -164,6 +165,8 @@ public class DayOfWeek {
 ```
 
 ### Switch With Enums
+Using enums in switch statements can make your code cleaner and more maintainable. Enums are a special type of class that represents a fixed set of constants.
+
 ```apex
 public enum Season { SPRING, SUMMER, FALL, WINTER }
 
@@ -188,6 +191,8 @@ public class SeasonDescriber {
 ```
 
 ### Switch With SObjects
+
+You can also use switch statements with SObjects to handle different types of records. This is particularly useful when you want to perform different actions based on the type of SObject.
 
 ```apex
 public class AccountNameExtractor {

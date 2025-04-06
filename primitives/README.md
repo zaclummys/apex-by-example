@@ -4,6 +4,22 @@ Apex supports a variety of primitive data types, which are the building blocks f
 
 These types are used to define variables, parameters, and return values in your Apex code. Below is a summary of the primitive types available in Apex, along with their characteristics and usage.
 
+## Table of Contents
+- [Primitive Data Types](#primitive-data-types)
+- [Usage](#usage)
+  - [Boolean](#boolean)
+  - [Integer](#integer)
+  - [Long](#long)
+  - [Double](#double)
+  - [Decimal](#decimal)
+  - [String](#string)
+  - [Date](#date)
+  - [Time](#time)
+  - [Datetime](#datetime)
+  - [ID](#id)
+  - [Blob](#blob)
+- [Further Reading](#further-reading)
+
 ## Primitive Data Types
 
 | Type      | Description                                                                           |

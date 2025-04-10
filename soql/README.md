@@ -38,11 +38,7 @@ To query a single object, you can use the following syntax:
 Account account = [SELECT Id, Name FROM Account];
 ```
 
-This query retrieves a single record from the `Account` object with the `Id` and `Name` fields.
-
-However, if the query returns more than one record, an `System.QueryException` will be thrown.
-
-Therefore, you can use the `LIMIT` clause to limit the number of records returned to one:
+This query retrieves a single record from the `Account` object with the `Id` and `Name` fields. However, if the query returns more than one record, an `System.QueryException` will be thrown. Therefore, you can use the `LIMIT` clause to limit the number of records returned to one:
 
 ```apex
 Account account = [SELECT Id, Name FROM Account LIMIT 1];
@@ -77,8 +73,8 @@ class ContactSelector {
 
 To query a single object with criteria, you can use the `WHERE` clause. For example, to retrieve all accounts with a specific name, you can use the following syntax:
 
-```sql
-SELECT Id, Name FROM Account WHERE Name = 'Acme Corporation'
+```apex
+List<Account> accounts = [SELECT Id, Name FROM Account WHERE Name = 'Acme Corporation'];
 ```
 
 This query retrieves the `Id` and `Name` fields from all records in the `Account` object where the `Name` field is equal to 'Acme Corporation'.

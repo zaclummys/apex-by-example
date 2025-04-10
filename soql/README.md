@@ -40,7 +40,7 @@ Account account = [SELECT Id, Name FROM Account];
 
 This query retrieves a single record from the `Account` object with the `Id` and `Name` fields.
 
-If the query returns more than one record, an exception will be thrown. You can use the `LIMIT` clause to limit the number of records returned to one:
+However, if the query returns more than one record, an exception will be thrown. Therefore, you can use the `LIMIT` clause to limit the number of records returned to one:
 
 ```apex
 Account account = [SELECT Id, Name FROM Account LIMIT 1];
@@ -48,7 +48,7 @@ Account account = [SELECT Id, Name FROM Account LIMIT 1];
 
 Now, if the query matches multiple records, only the first one will be returned, and no exception will be thrown.
 
-But sometimes you may want to handle the exception when a query returns more than one record. For example, if you are querying for a single record based on a unique field, such as an email address or a username, it is expected that only one record will be returned. If multiple records are returned, it indicates that there is a data integrity issue that needs to be addressed. In this case, you can use a try-catch block to handle the exception and return null or throw a custom exception:
+Sometimes it makes sense to have an exception being thrown. For example, if you are querying for a single record based on a unique field, such as an email address or a username, it is expected that only one record will be returned. If multiple records are returned, it indicates that there is a data integrity issue that needs to be addressed. In this case, you can use a try-catch block to handle the exception and return null or throw a custom exception:
 
 ```apex
 class ContactSelector {

@@ -40,7 +40,12 @@ Account account = [SELECT Id, Name FROM Account];
 
 This query retrieves a single record from the `Account` object with the `Id` and `Name` fields.
 
-However, if the query returns more than one record, an exception will be thrown. Therefore, you can use the `LIMIT` clause to limit the number of records returned to one:
+However, if the query returns more than one record, an `System.QueryException` will be thrown.
+
+> [!CAUTION]
+> To query a single object may throw an exception if the query returns more than one record.
+
+Therefore, you can use the `LIMIT` clause to limit the number of records returned to one:
 
 ```apex
 Account account = [SELECT Id, Name FROM Account LIMIT 1];
@@ -48,7 +53,10 @@ Account account = [SELECT Id, Name FROM Account LIMIT 1];
 
 Now, if the query matches multiple records, only the first one will be returned, and no exception will be thrown.
 
-Sometimes it makes sense to have an exception being thrown. For example, if you are querying for a single record based on a unique field, such as an email address or a username, it is expected that only one record will be returned. If multiple records are returned, it indicates that there is a data integrity issue that needs to be addressed. In this case, you can use a try-catch block to handle the exception and return null or throw a custom exception:
+> [!TIP]
+> You can use the `LIMIT` clause to limit the number of records returned to one.
+
+There are cases where allowing the system to throw an exception is appropriate. For example, if you are querying for a single record based on a unique field, such as an email address or a username, it is expected that only one record will be returned. If multiple records are returned, it indicates that there is a data integrity issue that needs to be addressed. In this case, you can use a try-catch block to handle the exception and return null or throw a custom exception:
 
 ```apex
 class ContactSelector {
@@ -62,11 +70,8 @@ class ContactSelector {
 }
 ```
 
-> [!CAUTION]
-> To query a single object may throw an exception if the query returns more than one record.
-
 > [!TIP]
-> To avoid exceptions when querying a single object, you can use the `LIMIT` clause to limit the number of records returned to one or use a try-catch block to handle the exception.
+> You can handle the `System.QueryException` using a try-catch block to return null or throw a custom exception.
 
 ## Query a single object with criteria
 

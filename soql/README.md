@@ -42,9 +42,6 @@ This query retrieves a single record from the `Account` object with the `Id` and
 
 However, if the query returns more than one record, an `System.QueryException` will be thrown.
 
-> [!CAUTION]
-> To query a single object may throw an exception if the query returns more than one record.
-
 Therefore, you can use the `LIMIT` clause to limit the number of records returned to one:
 
 ```apex
@@ -52,9 +49,6 @@ Account account = [SELECT Id, Name FROM Account LIMIT 1];
 ```
 
 Now, if the query matches multiple records, only the first one will be returned, and no exception will be thrown.
-
-> [!TIP]
-> You can use the `LIMIT` clause to limit the number of records returned to one.
 
 There are cases where allowing the system to throw an exception is appropriate. For example, if you are querying for a single record based on a unique field, such as an email address or a username, it is expected that only one record will be returned. If multiple records are returned, it indicates that there is a data integrity issue that needs to be addressed. In this case, you can use a try-catch block to handle the exception and return null or throw a custom exception:
 
@@ -69,6 +63,12 @@ class ContactSelector {
     }
 }
 ```
+
+> [!CAUTION]
+> To query a single object may throw an `System.QueryException` if the query returns more than one record.
+
+> [!TIP]
+> You can use the `LIMIT` clause to limit the number of records returned to one.
 
 > [!TIP]
 > You can handle the `System.QueryException` using a try-catch block to return null or throw a custom exception.

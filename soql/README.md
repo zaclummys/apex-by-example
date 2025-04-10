@@ -1,6 +1,6 @@
 # SOQL
 
-Salesforce Object Query Language (SOQL) is a query language used to retrieve data from Salesforce. It is similar to SQL but is specifically designed for Salesforce's data model and architecture.
+Salesforce Object Query Language (SOQL) is the query language used to retrieve data from Salesforce. It is similar to SQL but is specifically designed for Salesforce's data model and architecture.
 
 It can be used to query Salesforce objects, such as Accounts, Contacts, and Opportunities, and retrieve specific fields and records based on certain criteria.
 
@@ -40,17 +40,19 @@ Account account = [SELECT Id, Name FROM Account];
 
 This query retrieves a single record from the `Account` object with the `Id` and `Name` fields.
 
-> [!IMPORTANT]
-> If the query returns more than one record, an exception will be thrown. You can handle the exception using a try-catch block or use the `LIMIT` clause to limit the number of records returned.
+If the query returns more than one record, an exception will be thrown. You can use the `LIMIT` clause to limit the number of records returned to one:
 
-> [!TIP]
-> In some cases, it makes sense to have an exception thrown when a query returns more than one record. For example, if you are querying for a single record based on a unique field, such as an email address or a username, it is expected that only one record will be returned. If multiple records are returned, it indicates that there is a data integrity issue that needs to be addressed.
+```apex
+Account account = [SELECT Id, Name FROM Account LIMIT 1];
+```
 
-For scenarios like that, you can use the following syntax to handle the exception:
+Now, if the query matches multiple records, only the first one will be returned, and no exception will be thrown.
+
+But sometimes you may want to handle the exception when a query returns more than one record. For example, if you are querying for a single record based on a unique field, such as an email address or a username, it is expected that only one record will be returned. If multiple records are returned, it indicates that there is a data integrity issue that needs to be addressed. In this case, you can use a try-catch block to handle the exception and return null or throw a custom exception:
 
 ```apex
 class ContactSelector {
-    public static Contact getContactByEmail(String email) {
+    public static Contact getContactByEmail (String email) {
         try {
             return [SELECT Id, FirstName, LastName FROM Contact WHERE Email = :email];
         } catch (QueryException ex) {
@@ -59,6 +61,12 @@ class ContactSelector {
     }
 }
 ```
+
+> [!CAUTION]
+> To query a single object may throw an exception if the query returns more than one record.
+
+> [!TIP]
+> To avoid exceptions when querying a single object, you can use the `LIMIT` clause to limit the number of records returned to one or use a try-catch block to handle the exception.
 
 ## Query a single object with criteria
 

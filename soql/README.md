@@ -30,7 +30,7 @@ Account account = [SELECT Id, Name FROM Account LIMIT 1];
 > [!WARNING]
 > When you use `LIMIT 1`, it is important to note that, if there are multiple records, only one record will be returned. This may not be the record you expect, so it is important to ensure that your query is specific enough to return the desired record.
 
-There are cases where allowing the system to throw an exception is appropriate. For example, if you are querying for a single record based on a unique field, such as an email address or a username, it is expected that only one record will be returned. If multiple records are returned, it indicates that there is a data integrity issue that needs to be addressed. In this case, you can use a try-catch block to handle the exception and return null or throw a custom exception:
+There are cases in which allowing the system to throw an exception is more appropriate. For example, if you are querying for a single record based on a unique field, such as `Email` or `Username`, it is expected that only one record will be returned. If multiple records are returned, it indicates that there is a data integrity issue that needs to be addressed. In this case, you can use a try-catch block to handle the exception and return null or throw a custom exception:
 
 ```apex
 class ContactSelector {
@@ -43,15 +43,6 @@ class ContactSelector {
     }
 }
 ```
-
-> [!CAUTION]
-> To query a single object may throw an `System.QueryException` if the query returns more than one record.
-
-> [!TIP]
-> You can use the `LIMIT` clause to limit the number of records returned to one.
-
-> [!TIP]
-> You can handle the `System.QueryException` using a try-catch block to return null or throw a custom exception.
 
 ## Query a single object with criteria
 

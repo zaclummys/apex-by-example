@@ -69,6 +69,23 @@ To query multiple objects with criteria, you can use the `WHERE` clause to filte
 List<Account> accounts = [SELECT Id FROM Account WHERE Name = 'Acme Corporation'];
 ```
 
+## Query using binding
+
+Binding is a way to pass variables into a SOQL query. This allows you to use dynamic values in your queries, making them more flexible and reusable. Binding is done using the `:` character followed by the variable name.
+For example, to retrieve contacts with a specific name, you can use the following syntax:
+
+```apex
+String contactName = 'John Doe';
+
+List<Contact> contacts = [SELECT Id, FirstName, LastName FROM Contact WHERE Name = :contactName];
+```
+
+This query retrieves all contacts with the name 'John Doe'. The `contactName` variable is bound to the query, allowing you to use dynamic values in your queries.
+
+You can use binding in `WHERE` and `LIMIT` clauses.
+
+```apex
+
 ## Query using IN
 
 To query records using the `IN` operator, you can use the following syntax:
@@ -79,9 +96,19 @@ List<Lead> leads = [SELECT Id, FirstName, LastName FROM Lead WHERE LeadSource IN
 
 It will retrieve all leads where the `LeadSource` is either `Web`, `Phone` or `Email`. It is similar to use `LeadSource = 'Web' OR LeadSource = 'Phone' OR LeadSource = 'Email'`, but it is more concise and easier to read.
 
+You can also use the `IN` operator with a `Set<String>` or `List<String>` to pass the values dynamically. For example, to retrieve leads with specific lead sources, you can use the following syntax:
+
+```apex
+public class LeadSelector {
+    public static List<Lead> getLeadsBySource (Set<String> leadSources) {
+        return [SELECT Id, FirstName, LastName FROM Lead WHERE LeadSource IN :leadSources];
+    }
+}
+```
+
 ## Query by IDs
 
-To query records by IDs, you can use the `IN` operator with a `Set<Id>` or `List<Id>`. For example, to retrieve leads by their IDs, you can use the following syntax:
+To query records by IDs, you can use the `IN` operator with a `Set<Id>` or `List<Id>` to pass the IDs dynamically. For example, to retrieve leads with specific IDs, you can use the following syntax:
 
 ```apex
 public class LeadSelector {
@@ -92,10 +119,25 @@ public class LeadSelector {
 ```
 
 > [!TIP]
-> It is a good idea to use `Set<Object>` because SOQL does not care about order or duplicates. So using a `Set<Object>` can be more efficient than using a `List<Object>`.
+> It is a good idea to use `Set<Object>` because `IN` clause does not care about element order or duplicated elements. So using a `Set<Object>` can be more efficient than using a `List<Object>`.
 
 > [!WARNING]
 > Do not hardcode IDs in your code. It is a bad practice and can lead to issues when deploying to different environments. Instead, use a `Set<Id>` or `List<Id>` to pass the IDs dynamically.
+
+## Subqueries
+
+Subqueries are used to retrieve related records in a single query. For example, to retrieve all accounts with their related contacts, you can use the following syntax:
+
+```apex
+List<Account> accounts = [SELECT Id, Name, (SELECT Id, FirstName, LastName FROM Contacts) FROM Account];
+```
+This query retrieves all accounts with their related contacts. The subquery `(SELECT Id, FirstName, LastName FROM Contacts)` retrieves all contacts related to each account.
+
+You can also use subqueries with `WHERE` and `LIMIT` clauses. For example, to retrieve all accounts with their related contacts where the contact's last name is 'Smith', you can use the following syntax:
+
+```apex
+List<Account> accounts = [SELECT Id, Name, (SELECT Id, FirstName, LastName FROM Contacts WHERE LastName = 'Smith') FROM Account];
+```
 
 ## Limits
 

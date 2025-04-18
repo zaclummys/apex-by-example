@@ -80,7 +80,7 @@ String contactName = 'John Doe';
 List<Contact> contacts = [SELECT Id, FirstName, LastName FROM Contact WHERE Name = :contactName];
 ```
 
-This query retrieves all contacts with the name 'John Doe'. The `contactName` variable is bound to the query, allowing you to use dynamic values in your queries.
+This query retrieves all contacts with the name `John Doe`. The `contactName` variable is bound to the query, allowing you to use dynamic values in your queries.
 
 You can use binding in `WHERE` and `LIMIT` clauses.
 
@@ -95,7 +95,7 @@ List<Lead> leads = [SELECT Id, FirstName, LastName FROM Lead WHERE LeadSource IN
 
 It will retrieve all leads where the `LeadSource` is either `Web`, `Phone` or `Email`. It is similar to use `LeadSource = 'Web' OR LeadSource = 'Phone' OR LeadSource = 'Email'`, but it is more concise and easier to read.
 
-You can also use the `IN` operator with a `Set<String>` or `List<String>` to pass the values dynamically. For example, to retrieve leads with specific lead sources, you can use the following syntax:
+You can also use the `IN` operator with a binding. For example, to retrieve leads with specific lead sources, you can use the following syntax:
 
 ```apex
 public class LeadSelector {
@@ -154,8 +154,29 @@ You can also use subqueries with `WHERE` and `LIMIT` clauses. For example, to re
 List<Account> accounts = [SELECT Id, Name, (SELECT Id, FirstName, LastName FROM Contacts WHERE LastName = 'Smith') FROM Account];
 ```
 
+Now, to access the related contacts, you can use the `Contacts` relationship name. For example, to debug each contact related to each account, you can use the following code:
+
+```apex
+for (Account account : accounts) {
+    System.debug('Account: ' + account.Name);
+
+    for (Contact contact : account.Contacts) {
+        System.debug('Contact: ' + contact.FirstName + ' ' + contact.LastName);
+    }
+}
+```
+
 > [!TIP]
 > You can use subqueries to retrieve related records in a single query. This can improve performance and reduce the number of queries required to retrieve related records.
+
+## Subqueries for Custom Relationships
+If you have a custom relationship, you can use the relationship name in the subquery. For example, if you have a custom object `Visit__c` with a lookup relationship to `Account`, you can use the following syntax:
+
+```apex
+List<Account> accounts = [SELECT Id, Name, (SELECT Id, Date__c FROM Visits__r) FROM Account];
+```
+
+Note that the subquery uses the relationship name `Visits__r` instead of the object name `Visit__c`. This is because the relationship name is used to reference the related records in the subquery.
 
 ## Limits
 

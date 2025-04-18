@@ -84,7 +84,6 @@ This query retrieves all contacts with the name 'John Doe'. The `contactName` va
 
 You can use binding in `WHERE` and `LIMIT` clauses.
 
-```apex
 
 ## Query using IN
 

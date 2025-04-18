@@ -126,7 +126,23 @@ public class LeadSelector {
 
 ## Subqueries
 
-Subqueries are used to retrieve related records in a single query. For example, to retrieve all accounts with their related contacts, you can use the following syntax:
+Suppose you want to retrieve all accounts with their related contacts. You could use two separate queries to achieve this. For example, you could first retrieve all accounts and then retrieve all contacts related to those accounts based on the account IDs that you retrieved in the first query. The code would look like this:
+
+```apex
+List<Account> accounts = [SELECT Id, Name FROM Account];
+
+Set<Id> accountIds = new Set<Id>();
+
+for (Account account : accounts) {
+    accountIds.add(account.Id);
+}
+
+List<Contact> contacts = [SELECT Id, FirstName, LastName FROM Contact WHERE AccountId IN :accountIds];
+```
+
+This code retrieves all accounts and then retrieves all contacts related to those accounts. However, this approach is not efficient because it requires two separate queries.
+
+Instead, you can use a subquery to retrieve the related records in a single query. Subqueries are used to retrieve related records in a single query. For example, to retrieve all accounts with their related contacts, you can use the following syntax:
 
 ```apex
 List<Account> accounts = [SELECT Id, Name, (SELECT Id, FirstName, LastName FROM Contacts) FROM Account];
@@ -138,6 +154,9 @@ You can also use subqueries with `WHERE` and `LIMIT` clauses. For example, to re
 ```apex
 List<Account> accounts = [SELECT Id, Name, (SELECT Id, FirstName, LastName FROM Contacts WHERE LastName = 'Smith') FROM Account];
 ```
+
+> [!TIP]
+> You can use subqueries to retrieve related records in a single query. This can improve performance and reduce the number of queries required to retrieve related records.
 
 ## Limits
 

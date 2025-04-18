@@ -5,14 +5,17 @@ Salesforce Object Query Language (SOQL) is the query language used to retrieve d
 It can be used to query Salesforce objects, such as Accounts, Contacts, and Opportunities, and retrieve specific fields and records based on certain criteria.
 
 ## Table of Contents
-  - [Query a single object](#query-a-single-object)
-  - [Query a single object with criteria](#query-a-single-object-with-criteria)
-  - [Query multiple objects](#query-multiple-objects)
-  - [Query multiple objects with criteria](#query-multiple-objects-with-criteria)
-  - [Query using IN](#query-using-in)
-  - [Query by IDs](#query-by-ids)
-  - [Limits](#limits)
-  - [Further Reading](#further-reading)
+- [Query a single object](#query-a-single-object)
+- [Query a single object with criteria](#query-a-single-object-with-criteria)
+- [Query multiple objects](#query-multiple-objects)
+- [Query multiple objects with criteria](#query-multiple-objects-with-criteria)
+- [Query using binding](#query-using-binding)
+- [Query using IN](#query-using-in)
+- [Query by IDs](#query-by-ids)
+- [Subqueries](#subqueries)
+- [Subqueries for Custom Relationships](#subqueries-for-custom-relationships)
+- [Limits](#limits)
+- [Further Reading](#further-reading)
 
 ## Query a single object
 
@@ -170,13 +173,16 @@ for (Account account : accounts) {
 > You can use subqueries to retrieve related records in a single query. This can improve performance and reduce the number of queries required to retrieve related records.
 
 ## Subqueries for Custom Relationships
-If you have a custom relationship, you can use the relationship name in the subquery. For example, if you have a custom object `Visit__c` with a lookup relationship to `Account`, you can use the following syntax:
+If you have a custom relationship, you can also use a subquery. For example, if you have a custom object `Visit__c` with a lookup relationship to `Account`, you can use the following syntax:
 
 ```apex
 List<Account> accounts = [SELECT Id, Name, (SELECT Id, Date__c FROM Visits__r) FROM Account];
 ```
 
 Note that the subquery uses the relationship name `Visits__r` instead of the object name `Visit__c`. This is because the relationship name is used to reference the related records in the subquery.
+
+> [!TIP]
+> You must use the relationship name, not the object name, in the subquery. The relationship name is defined in the custom object definition and is used to reference the related records in the subquery.
 
 ## Limits
 

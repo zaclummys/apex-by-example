@@ -71,7 +71,7 @@ In this example, `john` and `jane` are two instances of the `Person` class, each
 
 A constructor is a special method that is called whenever an instance of a class is created. It is used to initialize the instance variables of the class. The constructor has the same name as the class and does not have a return type.
 
-In the `Person` defined above, the constructor was used to initialize the `name` and `age` properties of the `Person` class using the parameters passed to it:
+In the `Person` class, the constructor was used to initialize the `name` and `age` instance variables using the parameters passed to it:
 
 ```apex
 public Person (String name, Integer age) {
@@ -91,11 +91,11 @@ However, it is best to keep the constructor simple and focused on initializing t
 - ❌ Avoid doing I/O such as SOQLs, DMLs and Callouts.
 
 ### Instance Variables
-Instance variables are variables that belong to an instance of a class. They are used to store the state of the instance. Each instance of a class has its own copy of the instance variables. They are typically defined at the top of the class and can be either public or private:
+Instance variables are variables that belong to an instance of a class. They are used to store the internal state of the instance. They are typically defined at the top of the class and can be either public or private.
 
 #### Public Instance Variables
 
-Public instance variables are variables associated with an instance that can be accessed from inside or outside the class. They are typically used to expose data that should be accessible to other classes. They are defined using the `public` access modifier. For example:
+Public instance variables are instance variables that can be accessed from inside or outside the class. They are typically used to expose data that should be accessible to other classes. They are defined using the `public` access modifier. For example:
 
 ```apex
 public class OrderItemDTO {
@@ -123,7 +123,7 @@ System.debug(orderItem.productCode); // Output: ABC123
 System.debug(orderItem.quantity); // Output: 2
 ```
 
-You can also add some methods to the class to manipulate the instance variables. For example, you can create methods to update the product code and quantity:
+They can calso also be accessed from within the class. For example, you can create a instance method to update the product code and quantity of the order item:
 
 ```apex
 public void updateProductCode (String newProductCode) {
@@ -137,18 +137,12 @@ public void updateQuantity (Integer newQuantity) {
 }
 ```
 
-Uses for public instance variables include: 
-- ✅ Data Transfer Objects (DTOs) to transfer data between layers.
-- ✅ Simple data structures where you want to expose the data directly.
-- ✅ Simple classes where you want to expose the data directly.
-- ✅ Classes that are used for serialization or deserialization.
-
 > [!TIP]
 > Use public instance variables for simple data structures or Data Transfer Objects (DTOs) where you want to expose the data directly. For more complex classes, consider using private instance variables with indirect access through methods.
 
 #### Private Instance Variables
 
-Private instance variables are variables associated with an instance that can only be accessed from within the class. They are typically used to encapsulate data and prevent external access. They are defined using the `private` access modifier. For example:
+Private instance variables are instance variables that can only be accessed from within the class. They are typically used to encapsulate data and prevent external access. They are defined using the `private` access modifier. For example:
 
 ```apex
 public class Order {
@@ -169,11 +163,18 @@ public class Order {
 }
 ```
 
-In this example, `address`, `discount`, and `items` are private instance variables of the `Order` class. They can only be accessed from within the class. For example, you can create a method to add an item to the order:
+In this example, `address`, `discount`, and `items` are private instance variables of the `Order` class. They can only be accessed from within the class. For example, you can create a instance method to add an `OrderItem` to the `Order`:
 
 ```apex
-public void addItem (OrderItem item) {
-    items.add(item);
+public class Order {
+    /// Other code...
+
+    /**
+     * Add an order item to the order.
+     */
+    public void addItem (OrderItem item) {
+        items.add(item);
+    }
 }
 ```
 
@@ -188,11 +189,6 @@ System.debug(order.items); // Error: items cannot be accessed from outside the c
 
 > [!WARNING]
 > Although you can use getters and setters to access private instance variables, it is not always recommended. If a variable is private, it is usually because you want to encapsulate its value and behavior. In that case, consider whether a getter or setter is necessary or if it would be better to provide a method that performs some action based on the variable value.
-
-Uses for private instance variables include:
-- ✅ Complex classes where you want to encapsulate the data and behavior.
-- ✅ Classes that require validation or transformation of data before accessing it.
-- ✅ Classes that require complex logic to access or modify the data.
 
 ### Instance Methods
 
@@ -225,10 +221,6 @@ So, you can call this method to update the name of the person:
 john.updateName('John Smith');
 ```
 
-Uses for public instance methods include:
-- ✅ Exposing functionality that should be accessible to other classes.
-- ✅ Providing a public API for the class.
-
 #### Private Instance Methods
 
 Private instance methods are methods that can only be accessed from within the class. They are typically used to provide encapsulated functionality that should not be exposed to other classes. They are defined using the `private` access modifier. For example, in `Order` class, you could have a private method that gives a 100% discount to the order:
@@ -244,18 +236,6 @@ Notably, you do not want to expose this method to other classes, because it coul
 ```apex
 order.applyFullDiscount(); // Error: applyFullDiscount cannot be accessed from outside the class
 ```
-
-Uses for private instance methods include:
-- ✅ Providing encapsulated functionality that should not be exposed to other classes.
-- ✅ Implementing helper methods that are only used within the class.
-- ✅ Implementing complex logic that should not be exposed to other classes.
-- ✅ Implementing logic that could be misused if exposed to other classes.
-- ✅ Implementing logic that could lead to security vulnerabilities if exposed to other classes.
-- ✅ Implementing logic that could lead to inconsistencies if exposed to other classes.
-- ✅ Hiding implementation details that should not be exposed to other classes.
-- ✅ Preventing external classes from modifying the state of the class in unexpected ways.
-- ✅ Preventing external classes from accessing the internal state of the class in unexpected ways.
-- ✅ Preventing external classes from depending on specific implementation details of the class that could change in the future.
 
 ### This Keyword
 

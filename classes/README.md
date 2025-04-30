@@ -3,8 +3,25 @@
 Classes are the building blocks of Apex programming. They encapsulate data and behavior, allowing you to create reusable components. In this section, we will explore the structure of classes, their members, and how to use them effectively.
 
 ## Table of Contents
+- [Overview](#overview)
+- [Instances](#instances)
+  - [Constructor](#constructor)
+  - [Instance Variables](#instance-variables)
+    - [Public Instance Variables](#public-instance-variables)
+    - [Private Instance Variables](#private-instance-variables)
+  - [Instance Methods](#instance-methods)
+    - [Public Instance Methods](#public-instance-methods)
+    - [Private Instance Methods](#private-instance-methods)
+- [Access Modifiers](#access-modifiers)
+- [Getters](#getters)
+- [Setters](#setters)
+- [This](#this)
+- [Static](#static)
+  - [Static Methods](#static-methods)
+  - [Static Variables](#static-variables)
+  - [Static Blocks](#static-blocks)
 
-## Structure
+## Overview
 
 A class in Apex is defined using the `class` keyword. The class must have a name and can contain a constructor, properties and methods. For example, a simple class to represent a `Person` would look like this:
 
@@ -41,30 +58,220 @@ public class Person {
 }
 ```
 
-You might notice that the class, properties, and methods are all declared with the `public` access modifier. This means they can be accessed from outside the class. You can also use other access modifiers like `private`, `protected` or `global` to control visibility. See the [Access Modifiers](#access-modifiers) section for more details.
-
-## Constructor
-
 ## Instances
-
-To create an instance of a class, you use the `new` keyword followed by the class name and parentheses. This invokes the constructor of the class automatically. For example, to create an instance of the `Person` class, you would do the following:
+An instance of a class is an object created from that class. Each instance has its own set of properties and methods. You can create multiple instances of the same class, each with different values for their properties. Using the `Person` class defined above, you can create instances like this:
 
 ```apex
 Person john = new Person('John Doe', 30);
+Person jane = new Person('Jane Smith', 25);
+```
+In this example, `john` and `jane` are two instances of the `Person` class, each with their own `name` and `age` properties.
+
+### Constructor
+
+A constructor is a special method that is called whenever an instance of a class is created. It is used to initialize the instance variables of the class. The constructor has the same name as the class and does not have a return type.
+
+In the `Person` defined above, the constructor was used to initialize the `name` and `age` properties of the `Person` class using the parameters passed to it:
+
+```apex
+public Person (String name, Integer age) {
+    this.name = name;
+    this.age = age;
+}
 ```
 
-Now, you can call its public methods:
+You can do a lot of things in a constructor, such as:
+- ✅ Initialize properties.
+- ✅ Perform validations.
+- ✅ Set default values.
+- ✅ Call other methods.
+
+However, it is best to keep the constructor simple and focused on initializing the instance correctly. Here's a few things to avoid in a constructor:
+- ❌ Avoid performing complex calculations or logic.
+- ❌ Avoid doing I/O such as SOQLs, DMLs and Callouts.
+
+### Instance Variables
+Instance variables are variables that belong to an instance of a class. They are used to store the state of the instance. Each instance of a class has its own copy of the instance variables. They are typically defined at the top of the class and can be either public or private:
+
+#### Public Instance Variables
+
+Public instance variables are variables associated with an instance that can be accessed from inside or outside the class. They are typically used to expose data that should be accessible to other classes. They are defined using the `public` access modifier. For example:
+
+```apex
+public class OrderItemDTO {
+    /**
+     * The product code of the order item.
+     */
+    public String productCode;
+
+    /**
+     * The quantity of the order item.
+     */
+    public Integer quantity;
+}
+```
+
+In this example, `productCode` and `quantity` are public instance variables of the `OrderItemDTO` class. They can be accessed from outside the class like this:
+
+```apex
+OrderItemDTO orderItem = new OrderItemDTO();
+
+orderItem.productCode = 'ABC123';
+orderItem.quantity = 2;
+
+System.debug(orderItem.productCode); // Output: ABC123
+System.debug(orderItem.quantity); // Output: 2
+```
+
+You can also add some methods to the class to manipulate the instance variables. For example, you can create methods to update the product code and quantity:
+
+```apex
+public void updateProductCode (String newProductCode) {
+    productCode = newProductCode;
+}
+```
+
+```apex
+public void updateQuantity (Integer newQuantity) {
+    quantity = newQuantity;
+}
+```
+
+Uses for public instance variables include: 
+- ✅ Data Transfer Objects (DTOs) to transfer data between layers.
+- ✅ Simple data structures where you want to expose the data directly.
+- ✅ Simple classes where you want to expose the data directly.
+- ✅ Classes that are used for serialization or deserialization.
+
+> [!TIP]
+> Use public instance variables for simple data structures or Data Transfer Objects (DTOs) where you want to expose the data directly. For more complex classes, consider using private instance variables with indirect access through methods.
+
+#### Private Instance Variables
+
+Private instance variables are variables associated with an instance that can only be accessed from within the class. They are typically used to encapsulate data and prevent external access. They are defined using the `private` access modifier. For example:
+
+```apex
+public class Order {
+    /**
+     * The address of the order.
+     */
+    private Address address;
+
+    /**
+     * The discount applied to the order.
+     */
+    private Decimal discount;
+
+    /**
+     * The order items in the order.
+     */
+    private List<OrderItem> items;
+}
+```
+
+In this example, `address`, `discount`, and `items` are private instance variables of the `Order` class. They can only be accessed from within the class. For example, you can create a method to add an item to the order:
+
+```apex
+public void addItem (OrderItem item) {
+    items.add(item);
+}
+```
+
+Since `items` is a private instance variable, the `Order` class can guarantee that it is only modified through its own methods. This helps maintain the integrity of the class's state. So, if you try to access `items` from outside the class, you will get an error:
+
+```apex
+System.debug(order.items); // Error: items cannot be accessed from outside the class
+```
+
+> [!TIP]
+> Use private instance variables for encapsulating data and preventing external access. This helps maintain the integrity of the class's state and allows you to control how the data is accessed and modified.
+
+> [!WARNING]
+> Although you can use getters and setters to access private instance variables, it is not always recommended. If a variable is private, it is usually because you want to encapsulate its value and behavior. In that case, consider whether a getter or setter is necessary or if it would be better to provide a method that performs some action based on the variable value.
+
+Uses for private instance variables include:
+- ✅ Complex classes where you want to encapsulate the data and behavior.
+- ✅ Classes that require validation or transformation of data before accessing it.
+- ✅ Classes that require complex logic to access or modify the data.
+
+### Instance Methods
+
+Similar to instance variables, instance methods are methods that belong to an instance of a class. They are used to define the behavior of the instance. Each instance method must have a return type, a name, and a body. Instance methods can be public or private.
+
+#### Public Instance Methods
+Public instance methods are methods that can be accessed from inside or outside the class. They are typically used to expose functionality that should be accessible to other classes. They are defined using the `public` access modifier. For example:
+
+```apex
+public void greet () {
+    System.debug('Hello, my name is ' + name + ' and I am ' + age + ' years old.');
+}
+```
+In this example, `greet()` is a public instance method of the `Person` class. It can be called from outside the class like this:
 
 ```apex
 john.greet(); // Output: Hello, my name is John Doe and I am 30 years old.
 ```
-
-Aditionally, you can access its public properties:
+You can also create public instance methods to perform actions on the instance variables. For example, you can create a method to update the name of the person:
 
 ```apex
-System.debug(john.name); // Output: John Doe
-System.debug(john.age); // Output: 30
+public void updateName (String newName) {
+    name = newName;
+}
 ```
+
+So, you can call this method to update the name of the person:
+
+```apex
+john.updateName('John Smith');
+```
+
+Uses for public instance methods include:
+- ✅ Exposing functionality that should be accessible to other classes.
+- ✅ Providing a public API for the class.
+
+#### Private Instance Methods
+
+Private instance methods are methods that can only be accessed from within the class. They are typically used to provide encapsulated functionality that should not be exposed to other classes. They are defined using the `private` access modifier. For example, in `Order` class, you could have a private method that gives a 100% discount to the order:
+
+```apex
+private void applyFullDiscount () {
+    discount = 1.0;
+}
+```
+
+Notably, you do not want to expose this method to other classes, because it could be used wrongly. So, you can call this method from within the class, but it cannot be called from outside the class:
+
+```apex
+order.applyFullDiscount(); // Error: applyFullDiscount cannot be accessed from outside the class
+```
+
+Uses for private instance methods include:
+- ✅ Providing encapsulated functionality that should not be exposed to other classes.
+- ✅ Implementing helper methods that are only used within the class.
+- ✅ Implementing complex logic that should not be exposed to other classes.
+- ✅ Implementing logic that could be misused if exposed to other classes.
+- ✅ Implementing logic that could lead to security vulnerabilities if exposed to other classes.
+- ✅ Implementing logic that could lead to inconsistencies if exposed to other classes.
+- ✅ Hiding implementation details that should not be exposed to other classes.
+- ✅ Preventing external classes from modifying the state of the class in unexpected ways.
+- ✅ Preventing external classes from accessing the internal state of the class in unexpected ways.
+- ✅ Preventing external classes from depending on specific implementation details of the class that could change in the future.
+
+### This Keyword
+
+A class method can reference properties or other methods of the current instance just by using their names. However, if a method or property has the same name as a parameter or a variable, you can use the `this` keyword to refer to the instance member. For example:
+
+```apex
+public class Person {
+    private String name;
+
+    public void setName (String name) {
+        this.name = name;
+    }
+}
+```
+
+In this example, `this.name` refers to the instance variable `name`, while `name` refers to the parameter passed to the method.
 
 ## Access Modifiers
 
@@ -78,46 +285,73 @@ Access modifiers control the visibility of class members to other classes. The m
 > [!TIP]
 > We recommend using `private` access modifiers for class members unless you specifically need to expose them to other classes. This helps encapsulate the class's internal state and behavior, making it easier to maintain and understand.
 
+> [!CAUTION]
+> We do not recommend using `protected` access modifiers, even if you are extending a class. This is because it can lead to tight coupling between classes and make it harder to maintain the code. Instead, consider using other approaches to achieve the desired behavior.
+
 ## Getters
 
-Getters are methods that allow you to retrieve the value of a private property. They are typically named `getPropertyName()`. For example, if you have a private property `age`, you can create a getter method like this:
-
-```apex
-private Integer age;
-
-public Integer getAge () {
-    return age;
-}
-```
-
-You can then call this method to get the value of `age`:
-
-```apex
-Integer personAge = john.getAge(); // Output: 30
-```
-
-> [!WARNING]
-> Getters should not have any side effects. They should only return the value of the property without modifying any state or performing any actions.
-
-> [!NOTE]
-> Altough you can create getters for every property, it is not always recommended. If a property is private, it is usually because you want to encapsulate its value and behavior. In that case, consider whether a getter is necessary or if it would be better to provide a method that performs some action based on the property value.
-
-> [!TIP]
-> Sometimes it makes sense to make the property public and not create a getter method. For example, if `age` is public, you can simply do `john.age` to get the value.
+The getters section goes here...
 
 ## Setters
-Setters are methods that allow you to set the value of a private property. They are typically named `setPropertyName(value)`. For example, if you have a private property `name`, you can create a setter method like this:
+
+The setters sections goes here...
+
+## Static
+
+Static properties and methods are associated with the class itself, not with any instance. You can define static members using the `static` keyword and they are allowed only in outer classes.
+
+Static members are static only inside of a single transaction. It means that if you have a static variable or a static block in a class, it will be reset when the transaction ends. For that reason, they are not suitable for storing data that needs to persist across transactions.
+
+### Static Methods
+Static methods are methods that belong to the class itself rather than to any instance of the class. They can be called without creating an instance of the class. For example:
 
 ```apex
-private String name;
-
-public void setName (String name) {
-    this.name = name;
+public class Calculator {
+    public static Integer add (Integer a, Integer b) {
+        return a + b;
+    }
 }
 ```
 
-## This
-## Static Variables
-## Static Methods
+You can call the static method like this:
 
-## Further reading
+```apex
+Integer sum = Calculator.add(5, 10); // Output: 15
+```
+
+### Static Variables
+Static variables are variables that belong to the class itself rather than to any instance of the class. They can be accessed without creating an instance of the class. For example:
+
+```apex
+public class Counter {
+    public static Integer count = 0;
+}
+```
+
+You can access the static variable like this:
+
+```apex
+Counter.count = 5; // Set the static variable
+
+System.debug(Counter.count); // Output: 5
+```
+
+### Static Blocks
+
+Static blocks are used to initialize static variables or perform any setup that needs to be done when the class is loaded. They are executed only once when the class is loaded. For example, you can use a static block to initialize a static variable, like this:
+
+```apex
+public class Product {
+    private static Map<String, Decimal> discountsPerFamily;
+
+    static {
+        discountsPerFamily = new Map<String, Decimal>();
+
+        discountsPerFamily.put('Electronics', 0.1);
+        discountsPerFamily.put('Clothing', 0.2);
+        discountsPerFamily.put('Books', 0.05);
+    }
+}
+```
+
+Once the `Product` class is loaded, the static block will be executed and the `discountsPerFamily` map will be initialized with the values.

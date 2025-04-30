@@ -248,6 +248,18 @@ public void updateName (String name) {
 
 In this example, `this.name` refers to the instance variable `name`, while `name` refers to the parameter passed to the method.
 
+However, instead of using `this` keyword, you can also use a different name for the parameter. For example:
+
+```apex
+public void updateName (String newName) {
+    name = newName;
+}
+```
+
+In this example, `name` refers to the instance variable, while `newName` refers to the parameter passed to the method. This can make the code clearer and easier to read.
+
+You can also use `this` keyword to call instance methods from within the class. 
+
 ## Access Modifiers
 
 Access modifiers control the visibility of class members to other classes. The most common access modifiers in Apex are:

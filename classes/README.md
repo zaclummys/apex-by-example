@@ -195,7 +195,7 @@ System.debug(order.items); // Error: items cannot be accessed from outside the c
 Similar to instance variables, instance methods are methods that belong to an instance of a class. They are used to define the behavior of the instance. Each instance method must have a return type, a name, and a body. Instance methods can be public or private.
 
 #### Public Instance Methods
-Public instance methods are methods that can be accessed from inside or outside the class. They are typically used to expose functionality that should be accessible to other classes. They are defined using the `public` access modifier. For example:
+Public instance methods are instance methods that can be accessed from inside or outside the class. They are typically used to expose functionality that should be accessible to other classes. They are defined using the `public` access modifier. For example:
 
 ```apex
 public void greet () {
@@ -207,23 +207,10 @@ In this example, `greet()` is a public instance method of the `Person` class. It
 ```apex
 john.greet(); // Output: Hello, my name is John Doe and I am 30 years old.
 ```
-You can also create public instance methods to perform actions on the instance variables. For example, you can create a method to update the name of the person:
-
-```apex
-public void updateName (String newName) {
-    name = newName;
-}
-```
-
-So, you can call this method to update the name of the person:
-
-```apex
-john.updateName('John Smith');
-```
 
 #### Private Instance Methods
 
-Private instance methods are methods that can only be accessed from within the class. They are typically used to provide encapsulated functionality that should not be exposed to other classes. They are defined using the `private` access modifier. For example, in `Order` class, you could have a private method that gives a 100% discount to the order:
+Private instance methods are instance methods that can only be accessed from within the class. They are typically used to provide encapsulated functionality that should not be exposed to other classes. They are defined using the `private` access modifier. For example, in `Order` class, you could have a private method that gives a 100% discount to the `Order`:
 
 ```apex
 private void applyFullDiscount () {
@@ -231,23 +218,31 @@ private void applyFullDiscount () {
 }
 ```
 
-Notably, you do not want to expose this method to other classes, because it could be used wrongly. So, you can call this method from within the class, but it cannot be called from outside the class:
+Notably, you do not want to expose this method to other classes, because it could be used wrongly. So, you can keep it private. This way, you can ensure that the method is only called from within the class itself. If someone tries to call it from outside the class, they will get an error:
 
 ```apex
 order.applyFullDiscount(); // Error: applyFullDiscount cannot be accessed from outside the class
 ```
 
-### This Keyword
-
-A class method can reference properties or other methods of the current instance just by using their names. However, if a method or property has the same name as a parameter or a variable, you can use the `this` keyword to refer to the instance member. For example:
+It still can be called from other instance methods of the class, like this:
 
 ```apex
-public class Person {
-    private String name;
-
-    public void setName (String name) {
-        this.name = name;
+public void applyDiscount (Decimal discount) {
+    if (customer.isVIP()) {
+        applyFullDiscount();
+    } else {
+        this.discount = discount;
     }
+}
+```
+
+### This Keyword
+
+The `this` keyword is used to refer to the current instance of a class. It is often used to disambiguate between instance variables and method parameters or local variables that have the same name. For example:
+
+```apex
+public void updateName (String name) {
+    this.name = name;
 }
 ```
 

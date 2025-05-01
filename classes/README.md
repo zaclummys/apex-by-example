@@ -130,9 +130,7 @@ They can calso also be accessed from within the class. For example, you can crea
 public void updateProductCode (String newProductCode) {
     productCode = newProductCode;
 }
-```
 
-```apex
 public void updateQuantity (Integer newQuantity) {
     quantity = newQuantity;
 }
@@ -164,22 +162,15 @@ public class Order {
 }
 ```
 
-In this example, `address`, `discount`, and `items` are private instance variables of the `Order` class. They can only be accessed from within the class. For example, you can create a instance method to add an `OrderItem` to the `Order`:
+In this example, `address`, `discount`, and `items` are private instance variables of the `Order` class. They can only be accessed from within the class. For example, you can create a instance method to add an `OrderItem` in the `Order` class:
 
 ```apex
-public class Order {
-    /// Other code...
-
-    /**
-     * Add an order item to the order.
-     */
-    public void addItem (OrderItem item) {
-        items.add(item);
-    }
+public void addItem (OrderItem item) {
+    items.add(item);
 }
 ```
 
-Since `items` is a private instance variable, the `Order` class can guarantee that it is only modified through its own methods. This helps maintain the integrity of the class's state. So, if you try to access `items` from outside the class, you will get an error:
+Since `items` is `private`, the `Order` class can guarantee that it is only modified through its own methods. This helps maintain the integrity of the class's state. So, if you try to access `items` from outside the class, you will get an error:
 
 ```apex
 System.debug(order.items); // Error: items cannot be accessed from outside the class
@@ -273,7 +264,7 @@ Access modifiers control the visibility of class members to other classes. The m
 > [!TIP]
 > We recommend using `private` access modifiers for class members unless you specifically need to expose them to other classes. This helps encapsulate the class's internal state and behavior, making it easier to maintain and understand.
 
-> [!CAUTION]
+> [!WARNING]
 > We do not recommend using `protected` access modifiers, even if you are extending a class. This is because it can lead to tight coupling between classes and make it harder to maintain the code. Instead, consider using other approaches to achieve the desired behavior.
 
 ## Static

@@ -12,6 +12,7 @@ Each example is organized in its own folder and includes a README file that expl
 - [Control Flow](control-flow/README.md)
 - [SOQL](soql/README.md)
 - [Classes](classes/README.md)
+- [Bulkification](bulkification/README.md)
 
 ## Contributing
 If you would like to contribute to this repository, please fork the repository and create a pull request with your changes. We welcome contributions of all kinds, including new examples, improvements to existing examples, and bug fixes. 

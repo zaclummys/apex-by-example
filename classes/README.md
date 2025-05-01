@@ -12,14 +12,15 @@ Classes are the building blocks of Apex programming. They encapsulate data and b
   - [Instance Methods](#instance-methods)
     - [Public Instance Methods](#public-instance-methods)
     - [Private Instance Methods](#private-instance-methods)
+  - [This Keyword](#this-keyword)
 - [Access Modifiers](#access-modifiers)
-- [Getters](#getters)
-- [Setters](#setters)
-- [This](#this)
 - [Static](#static)
   - [Static Methods](#static-methods)
   - [Static Variables](#static-variables)
   - [Static Blocks](#static-blocks)
+- [Getters](#getters)
+- [Setters](#setters)
+- [Further Reading](#further-reading)
 
 ## Overview
 
@@ -275,14 +276,6 @@ Access modifiers control the visibility of class members to other classes. The m
 > [!CAUTION]
 > We do not recommend using `protected` access modifiers, even if you are extending a class. This is because it can lead to tight coupling between classes and make it harder to maintain the code. Instead, consider using other approaches to achieve the desired behavior.
 
-## Getters
-
-The getters section goes here...
-
-## Setters
-
-The setters sections goes here...
-
 ## Static
 
 Static properties and methods are associated with the class itself, not with any instance. You can define static members using the `static` keyword and they are allowed only in outer classes.
@@ -342,3 +335,64 @@ public class Product {
 ```
 
 Once the `Product` class is loaded, the static block will be executed and the `discountsPerFamily` map will be initialized with the values.
+
+## Getters
+
+Getters are public instance methods that are used to retrieve the value of a private instance variable. They are typically defined with the `get` prefix followed by the name of the variable. For example, in the `Person` class, you could define a getter for the `name` instance variable like this:
+
+```apex
+public String getName () {
+    return name;
+}
+```
+
+You can call the getter like this:
+
+```apex
+String personName = john.getName(); // Output: John Doe
+```
+
+You can use getters in varying ways, such as:
+- ✅ To retrieve the value of a private instance variable.
+- ✅ To perform calculations or transformations before returning the value.
+- ✅ To provide a read-only view of the variable.
+- ✅ To hide the implementation details of the variable.
+
+It is important to note that getters should not modify the state of the instance. They should only return the value of the variable. If you need to modify the state, you should use a setter instead.
+
+## Setters
+
+Setters are public instance methods that are used to set the value of a private instance variable. They are typically defined with the `set` prefix followed by the name of the variable. For example, in the `Person` class, you could define a setter for the `name` instance variable like this:
+
+```apex
+public void setName (String name) {
+    this.name = name;
+}
+```
+
+You can call the setter like this:
+
+```apex
+john.setName('John Smith'); // Set the name to John Smith
+```
+
+You can also use the setter to perform validation or other logic before setting the value. For example, you could modify the setter to ensure that the name is not blank:
+
+```apex
+public void setName (String name) {
+    if (String.isBlank(name)) {
+        throw new IllegalArgumentException('Name cannot be blank');
+    }
+
+    this.name = name;
+}
+```
+
+In this way, you can ensure that the name is always valid before setting it. If someone tries to set an blank name, they will get an error:
+
+```apex
+john.setName(''); // Error: Name cannot be blank
+```
+
+## Further Reading
+- [Static and Instance Methods, Variables, and Initialization Code | Apex Developer Guide | Salesforce Developers](https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_static.htm)

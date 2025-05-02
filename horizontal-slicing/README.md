@@ -10,7 +10,7 @@ This approach allows for better separation of concerns, making it easier to main
 
 ## Presentation Layer
 
-The presentation layer is responsible for receive requests from Lightning Web Components (LWC) or Flow, then passing them to the application layer. It also handles the responses from the application layer and sends them back to the caller. It is tipically implemented as a `Controller`.
+The presentation layer is responsible for handling outside interactions, such as Lightning Web Components, Visualforce Pages, and Flow. It receives requests, passes them to the application layer, and handles the responses. The presentation layer should be thin and focused on translating user input into a format that can be understood by the application layer and vice versa. It is typically implemented as a `Controller` or a `Handler`.
 
 Let's say we have a simple real estate application that allows users to update the address of a property. The presentation layer would look like this:
 
@@ -18,13 +18,12 @@ Let's say we have a simple real estate application that allows users to update t
 public with sharing class UpdatePropertyAddressController {
     @AuraEnabled
     public static void execute (Id propertyId, String street, String city, String state, String zipCode) {
-        // Call the application layer to update the property address
         UpdatePropertyAddressService.execute(propertyId, street, city, state, zipCode);
     }
 }
 ```
 
-Note that the presentation layer is responsible only for handling the request and passing it to the application layer. It does not contain any business logic or data access code. This allows us to keep the presentation layer thin and focused on its primary responsibility: handling requests and responses.
+Note that the presentation layer is responsible only for handling the request and passing it to the application layer. It does not contain any business logic or data access code.
 
 ## Application Layer
 
@@ -40,7 +39,7 @@ public with sharing class UpdatePropertyAddressService {
         }
 
         // Retrieve the property from the infrastructure layer
-        Property property = PropertyRepository.getByIdOrThrow(propertyId);
+        Property property = PropertyRepository.getById(propertyId);
 
         // Update the address in the domain layer
         property.updateAddress(street, city, state, zipCode);
@@ -56,11 +55,11 @@ public with sharing class UpdatePropertyAddressService {
 This layer can also be used to implement feature toggling, caching, logging, and other cross-cutting concerns.
 
 ## Domain Layer
-The domain layer is responsible for representing the core business domain and contains the domain entities, the relationships between them and domain services. It is typically implemented as a set of classes that represent the business objects and their behavior.
+The domain layer is responsible for representing the core business domain and contains the domain entities, the relationships between them and domain services. It is typically implemented as a set of classes that represent the business objects and their behavior using a non-technical language.
 
 The domain layer should not depend on any other layers, and it should contain the business logic that is specific to the domain. This allows us to keep the domain layer independent and focused on the core business rules.
 
-Let's see how we can implement a simple domain a `Property` with an `Address` in the domain layer:
+Let's see how we can implement a `Property` with an `Address` in the domain layer:
 
 ```apex
 public class Property {
@@ -71,7 +70,6 @@ public class Property {
     public Property (Id id, String name, String street, String city, String state, String zipCode) {
         this.id = id;
         this.name = name;
-
         this.address = new Address(street, city, state, zipCode);
     }
 
@@ -110,8 +108,20 @@ public class Property {
         private String zipCode;
 
         private Address (String street, String city, String state, String zipCode) {
-            if (String.isBlank(street) || String.isBlank(city) || String.isBlank(state) || String.isBlank(zipCode)) {
-                throw new IllegalArgumentException('Address fields cannot be blank.');
+            if (String.isBlank(street)) {
+                throw new AddressException('Street cannot be blank.');
+            }
+
+            if (String.isBlank(city)) {
+                throw new AddressException('City cannot be blank.');
+            }
+
+            if (String.isBlank(state)) {
+                throw new AddressException('State cannot be blank.');
+            }
+
+            if (String.isBlank(zipCode)) {
+                throw new AddressException('Zip code cannot be blank.');
             }
 
             this.street = street;
@@ -139,7 +149,7 @@ Now, let's see an example of a repository that retrieves and saves properties to
 ```apex
 public with sharing class PropertyRepository {
     public static Property getById (Id propertyId) {
-        Property__c property = [
+        Property__c propertyRecord = [
             SELECT
                 Id,
                 Name,
@@ -152,19 +162,19 @@ public with sharing class PropertyRepository {
         ];
 
         Property property = new Property(
-            property.Id,
-            property.Name,
-            property.Street__c,
-            property.City__c,
-            property.State__c,
-            property.ZipCode__c
+            propertyRecord.Id,
+            propertyRecord.Name,
+            propertyRecord.Street__c,
+            propertyRecord.City__c,
+            propertyRecord.State__c,
+            propertyRecord.ZipCode__c
         );
 
         return property;
     }
 
     public static void save (Property property) {
-        Property__c property = new Property__c(
+        Property__c propertyRecord = new Property__c(
             Id = property.getId(),
             Name = property.getName(),
             Street__c = property.getStreet(),
@@ -173,7 +183,9 @@ public with sharing class PropertyRepository {
             ZipCode__c = property.getZipCode()
         );
 
-        upsert property;
+        upsert propertyRecord;
+
+        // Handle any additional logic needed after saving the property
     }
 }
 ```

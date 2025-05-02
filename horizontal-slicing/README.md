@@ -10,12 +10,12 @@ This approach allows for better separation of concerns, making it easier to main
 
 ## Presentation Layer
 
-The presentation layer is responsible for handling outside interactions, such as Lightning Web Components, Visualforce Pages, and Flow. It receives requests, passes them to the application layer, and handles the responses. The presentation layer should be thin and focused on translating user input into a format that can be understood by the application layer and vice versa. It is typically implemented as a `Controller` or a `Handler`.
+The presentation layer is responsible for handling outside interactions, such as Lightning Web Components, Visualforce Pages, and Flow. It receives requests, passes them to the application layer, and handles the responses. The presentation layer should be thin and focused on translating user input into a format that can be understood by the application layer and vice versa. It is typically implemented as a `Controller`, `Handler` or `REST` class.
 
 Let's say we have a simple real estate application that allows users to update the address of a property. The presentation layer would look like this:
 
 ```apex
-public with sharing class UpdatePropertyAddressController {
+public class UpdatePropertyAddressController {
     @AuraEnabled
     public static void execute (Id propertyId, String street, String city, String state, String zipCode) {
         UpdatePropertyAddressService.execute(propertyId, street, city, state, zipCode);
@@ -31,7 +31,7 @@ The application layer is responsible for orchestrating the flow of data between 
 
 
 ```apex
-public with sharing class UpdatePropertyAddressService {
+public class UpdatePropertyAddressService {
     public static void execute (Id propertyId, String street, String city, String state, String zipCode) {
         // Validate the input data
         if (String.isBlank(propertyId)) {
@@ -135,19 +135,20 @@ public class Property {
 
 Notice that the `Property` class contains the business logic related to the property, such as updating the address. It also contains a nested `Address` class that represents the address of the property. The `Address` class is responsible for validating the address fields and ensuring that they are not blank.
 
-The `Property` class is also hiding the implementation details of the `Address`, so other layers do not need to know about the internal structure of the `Property` class. This allows us to keep the domain layer focused on the business logic and can change more easily without affecting other layers.
+The `Property` class is also hiding its implementation details, so other layers do not need to know about the internal structure of the `Property` class. This allows us to keep the domain layer focused on the business logic and can change more easily without affecting other layers.
 
 ## Infrastructure Layer
 The infrastructure layer is responsible for providing the technical capabilities and services needed to support the application, such as data access, external service integrations, and other technical concerns. It does not contain any business logic or domain-specific code. It is typically implemented as a set of classes that provide technical services.
 
 Some examples of classes that could be implemented in the infrastructure layer include:
 - **Repositories**: Classes that handle data access and persistence. They interact with the database and provide methods to retrieve, save, and delete domain entities.
-- **Services**: Classes that provide technical services, such as sending emails, making HTTP requests, or integrating with external systems.
+- **Callouts**: Classes that handle external service integrations. They provide methods to make HTTP requests and handle responses from external APIs.
+- **WebService**: Classes that provide common technical services, such as logging, caching, and configuration management.
 
 Now, let's see an example of a repository that retrieves and saves properties to the database.
 
 ```apex
-public with sharing class PropertyRepository {
+public class PropertyRepository {
     public static Property getById (Id propertyId) {
         Property__c propertyRecord = [
             SELECT

@@ -10,7 +10,7 @@ This approach allows for better separation of concerns, making it easier to main
 
 ## Presentation Layer
 
-The presentation layer is responsible for handling outside interactions, such as Lightning Web Components, Visualforce Pages, and Flow. It receives requests, passes them to the application layer, and handles the responses. The presentation layer should be thin and focused on translating user input into a format that can be understood by the application layer and vice versa. It is typically implemented as a `Controller`, `Handler` or `REST` class.
+The presentation layer is responsible for handling interactions with the outside world, such as Lightning Web Components, Visualforce Pages, Flows and Inbound Callouts. It receives requests, passes them to the application layer, and handles the responses. The presentation layer should be thin and focused on translating user input into a format that can be understood by the application layer and vice versa. It is typically implemented as a `Controller`, `Handler` or `REST` class.
 
 Let's say we have a simple real estate application that allows users to update the address of a property. The presentation layer would look like this:
 
@@ -142,8 +142,8 @@ The infrastructure layer is responsible for providing the technical capabilities
 
 Some examples of classes that could be implemented in the infrastructure layer include:
 - **Repositories**: Classes that handle data access and persistence. They interact with the database and provide methods to retrieve, save, and delete domain entities.
-- **Callouts**: Classes that handle external service integrations. They provide methods to make HTTP requests and handle responses from external APIs.
-- **WebService**: Classes that provide common technical services, such as logging, caching, and configuration management.
+- **Callouts**: Classes that handle external service integrations. They provide methods to make Outbound callouts to external APIs and handle the responses.
+- **Utilities**: Classes that provide technical services, such as logging, caching, and configuration management.
 
 Now, let's see an example of a repository that retrieves and saves properties to the database.
 

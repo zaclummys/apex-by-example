@@ -109,19 +109,19 @@ public class Property {
 
         private Address (String street, String city, String state, String zipCode) {
             if (String.isBlank(street)) {
-                throw new AddressException('Street cannot be blank.');
+                throw new IllegalArgumentException('Street cannot be blank.');
             }
 
             if (String.isBlank(city)) {
-                throw new AddressException('City cannot be blank.');
+                throw new IllegalArgumentException('City cannot be blank.');
             }
 
             if (String.isBlank(state)) {
-                throw new AddressException('State cannot be blank.');
+                throw new IllegalArgumentException('State cannot be blank.');
             }
 
             if (String.isBlank(zipCode)) {
-                throw new AddressException('Zip code cannot be blank.');
+                throw new IllegalArgumentException('Zip code cannot be blank.');
             }
 
             this.street = street;
